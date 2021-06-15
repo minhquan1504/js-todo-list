@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Todo list</title>
+  </head>
+  <body>
+    <div class="container">
+        <h1>Todo list</h1>
+        <div class="row">
+            <div id="demo"></div>
+        </div>
+
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-9">
+                            <input type="txt" class="form-control" id="todo-element">
+                        </th>
+                        <th class="col-3">
+                            <button type="button" class="btn btn-primary" style="width: 45%;" id="btn-add">ADD</button>
+                            <button type="button" class="btn btn-danger" style="width: 45%;" id="btn-delete-all">CLEAR</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="todo-list-element">
+                    <!-- <tr>
+                        <td class="col-9"><label>test</label></td>
+                        <td  class="col-3 text-center"><button type="button" class="btn btn-danger" onclick="remove(1)">X</button></td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+  </body>
+</html>
+<script type="text/javascript" src="assets/todoList.js"></script>
+<script type="text/javascript">
+    // sort latest
+    TodoList.prototype.createAction = function (val) {
+        if (val) {
+            this.list = [val].concat(this.list)
+        }
+    }
+
+    var todo = new TodoList();
+    todo.loadAction('todo-list-2021');
+
+    var btnAdd = document.getElementById('btn-add').onclick = createTodo;
+    function createTodo() {
+        var element = document.getElementById('todo-element');
+        todo.createAction(element.value);
+        todo.saveAction('todo-list-2021');
+        element.value = '';
+        renderTodo();
+    }
+
+    document.onkeyup = function (event) {
+        if (event.which == 13 || event.keyCode == 13) {
+            createTodo();
+        }
+    };
+
+    function deleteTodo(index) {
+        var r = confirm(`DELETE: ${todo.readAction(index)} ?`);
+        if (r == true) {
+            todo.deleteAction(index);
+            todo.saveAction('todo-list-2021');
+            renderTodo();
+        }
+    }
+
+    var btnDeleteAll = document.getElementById('btn-delete-all').onclick = deleteAllTodo;
+    function deleteAllTodo() {
+        var r = confirm(`DELETE ALL ?`);
+        if (r == true) {
+            todo.deleteAllAction();
+            todo.saveAction('todo-list-2021');
+            renderTodo();
+        }
+    }
+
+    renderTodo();
+    function renderTodo() {
+        var list = todo.list;
+        var html = '';
+        for(index in list) {
+            html += `
+                <tr>
+                    <td class="col-9"><label>${list[index]}</label></td>
+                    <td  class="col-3 text-center"><button type="button" class="btn btn-danger" onclick="deleteTodo(${index})">X</button></td>
+                </tr>
+            `;
+
+        }
+        document.getElementById('todo-list-element').innerHTML = html;
+    }
+</script>
